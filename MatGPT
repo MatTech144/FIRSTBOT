@@ -1,0 +1,58 @@
+import discord
+import random
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='#', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Hola, soy un bot {bot.user}!')
+
+@bot.command()
+async def heh(ctx, count_heh = 5):
+    await ctx.send("he" * count_heh)
+
+@bot.command()
+async def Matteo(ctx):
+    await ctx.send(f"Matteo es programador")
+
+@bot.command()
+async def suma(ctx, num1: int, num2: int):
+    await ctx.send(f"la suma de {num1} y {num2} es igual {num1 + num2}")
+
+@bot.command()
+async def choose(ctx, *choices: str):
+    """Chooses between multiple choices."""
+    await ctx.send(random.choice(choices))
+
+@bot.command()
+async def repeat(ctx, times: int, content='repeating...'):
+    """Repeats a message multiple times."""
+    for i in range(times):
+        await ctx.send(content)
+
+@bot.command()
+async def joined(ctx, member: discord.Member):
+    """Says when a member joined."""
+    # Joined at can be None in very bizarre cases so just handle that as well
+    if member.joined_at is None:
+        await ctx.send(f'{member} has no join date.')
+    else:
+        await ctx.send(f'{member} joined {discord.utils.format_dt(member.joined_at)}')
+
+@bot.command()
+async def haces_algo_mas(ctx):
+    await ctx.send(f"por ahora solo hago esto, soy un bot en proceso, accede a mis funciones escribiendo 'funciones' ")
+
+@bot.command()
+async def funciones(ctx):
+    await ctx.send(f"Mis funciones son las siguientes: puedo sumar, decir cuando te uniste al servidor, elegir entre opciones, repetir palabras y saludar")
+
+bot.run("")
