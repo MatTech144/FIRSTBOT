@@ -1,6 +1,9 @@
 import discord
 import random
+import os
+import requests
 from discord.ext import commands
+print(os.listdir('images'))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -48,11 +51,43 @@ async def joined(ctx, member: discord.Member):
         await ctx.send(f'{member} joined {discord.utils.format_dt(member.joined_at)}')
 
 @bot.command()
+async def meme(ctx):
+    imagenes = os.listdir('images')
+    with open(f'images/{random.choice(imagenes)}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+def get_duck_image_url():    
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+
+@bot.command('duck')
+async def duck(ctx):
+    '''Una vez que llamamos al comando duck, 
+    el programa llama a la función get_duck_image_url'''
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
+
+def dogs_image_url():
+    url = "https://random.dog/woof.json"
+    res = requests.get(url)
+    data = res.json()
+    return data["url"]
+
+@bot.command("dog")
+async def dog(ctx):
+    image_url = dogs_image_url()
+    await ctx.send(image_url)
+
+@bot.command()
 async def haces_algo_mas(ctx):
     await ctx.send(f"por ahora solo hago esto, soy un bot en proceso, accede a mis funciones escribiendo 'funciones' ")
 
 @bot.command()
 async def funciones(ctx):
-    await ctx.send(f"Mis funciones son las siguientes: puedo sumar, decir cuando te uniste al servidor, elegir entre opciones, repetir palabras y saludar")
+    await ctx.send(f"Mis funciones son las siguientes: puedo sumar, decir cuando te uniste al servidor, elegir entre opciones, enviar fotos random de patos y perros, repetir palabras y saludar")
 
 bot.run("")
